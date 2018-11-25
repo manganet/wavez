@@ -53,6 +53,11 @@ const {
   admin
 } = require('./middleware/admin');
 
+// UTILS
+
+const { sendEmail } = require('./utils/mail/index');
+
+
 //====================
 //        PORDUCTS
 //====================
@@ -242,7 +247,10 @@ app.post('/api/users/register', (req, res) => {
       success: false,
       err
     });
-    res.status(200).json({
+
+    sendEmail(doc.email, doc.name, null, "welcome");
+
+    return res.status(200).json({
       success: true
     })
   })
