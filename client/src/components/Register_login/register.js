@@ -130,8 +130,7 @@ class Register extends Component {
       this.setState({
         formError: true
       })
-    }
-        
+    }        
   }
 
   render() {
