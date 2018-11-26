@@ -128,7 +128,7 @@ class UserCart extends Component {
                 </div>
               </div>
           
-            :
+              :
 
               this.state.showSuccess ?
                   <div className="cart_success">
@@ -141,8 +141,8 @@ class UserCart extends Component {
                     </div>
                   </div>               
                 
-              :
-              this.showNoItemMessage()
+                :
+                this.showNoItemMessage()
             }
           </div>
           {

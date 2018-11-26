@@ -216,7 +216,7 @@ class AddProduct extends Component {
       }, () => {
         this.props.dispatch(clearProduct())
       })
-    },1000)
+    },3000)
   }
 
   submitForm = (event)=> {

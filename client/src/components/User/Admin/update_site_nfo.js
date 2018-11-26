@@ -106,7 +106,7 @@ class UpdateSiteNfo extends Component {
             this.setState({
               formSuccess: false
             })
-          }, 1000)
+          }, 3000)
         })
       });
       

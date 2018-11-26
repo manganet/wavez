@@ -4,6 +4,9 @@ const cookieParser = require('cookie-parser');
 const formidable = require('express-formidable');
 const cloudinary = require('cloudinary');
 const SHA1 = require('crypto-js/sha1');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const mongoose = require('mongoose');
@@ -58,12 +61,56 @@ const {
 
 const { sendEmail } = require('./utils/mail/index');
 
-// const date = new Date();
-// const po = `PO-${date.getSeconds()}${date.getMilliseconds()}-${SHA1("132153436841321").toString().substring(0,8)}`
-// console.log(po)
+
+// STORAGE MULTER CONFIG
+
+let storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/')
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`)
+  },
+    // fileFilter:(req,file,cb)=>{
+
+    //     const ext = path.extname(file.originalname)
+    //     if(ext !== '.jpg' && ext !== '.png'){
+    //         return cb(res.status(400).end('only jpg, png is allowed'),false);
+    //     }
+
+    //     cb(null,true)
+    // }
+});
 
 //====================
-//        PORDUCTS
+//    ADMIN UPLOADS
+//====================
+
+const upload = multer({ storage: storage }).single('file');
+
+app.post('/api/users/uploadfile', auth, admin, (req, res) => {
+  upload(req, res, (err) => {
+    if(err){
+      return res.json({success:false, err})
+    }
+    return res.json({success:true})
+  })
+})
+
+app.get('/api/users/admin_files', auth, admin, (req, res) => {
+  const dir = path.resolve(".") + '/uploads/';
+  fs.readdir(dir, (err,items) => {
+    return res.status(200).send(items);
+  })
+})
+
+app.get('/api/users/download/:id', auth, admin, (req,res) => {
+  const file = path.resolve(".") + `/uploads/${req.params.id}`;
+  res.download(file)
+})
+
+//====================
+//        PRODUCTS
 //====================
 
 app.post('/api/product/shop', (req, res) => {
